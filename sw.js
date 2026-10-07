@@ -1,9 +1,9 @@
 // Career Hub — service worker: internet primeiro, cópia guardada se estiver offline.
 // Quando sai versão nova, atualiza e recarrega a página sozinho.
-const CACHE = "career-hub-v3";
+const CACHE = "career-hub-v4";
 const ARQUIVOS = [
   "./", "index.html", "style.css", "script.js", "clubes.js", "selecoes.js",
-  "firebase-config.js", "nuvem.js", "logo.png", "icon-192.png", "icon-512.png", "manifest.webmanifest"
+  "firebase-config.js", "nuvem.js", "logo.png", "icon-192.png", "icon-512.png", "icon-maskable-192.png", "icon-maskable-512.png", "apple-touch-icon.png", "manifest.webmanifest"
 ];
 
 self.addEventListener("install", function (evento) {
