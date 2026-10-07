@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0c1219">
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Career Hub">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Career Hub</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- TELA DE CARREGAMENTO -->
+  <section id="tela-carregando" class="tela">
+    <header>
+      <h1>Carreira FIFA</h1>
+      <p id="texto-carregando">Carregando...</p>
+    </header>
+  </section>
+
+  <!-- TELA DE LOGIN -->
+  <section id="tela-login" class="tela escondido">
+    <header>
+      <h1>Carreira FIFA</h1>
+      <p>Entre para ver seus saves em qualquer aparelho</p>
+    </header>
+
+    <div class="caixa">
+      <label for="login-email">E-mail</label>
+      <input type="email" id="login-email" autocomplete="email" placeholder="voce@exemplo.com">
+
+      <label for="login-senha">Senha</label>
+      <div class="campo-senha">
+        <input type="password" id="login-senha" autocomplete="current-password" placeholder="Mínimo 6 caracteres">
+        <button type="button" id="btn-ver-senha" aria-label="Mostrar senha" title="Mostrar senha">
+          <!-- olho aberto -->
+          <svg class="icone-olho" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <!-- olho cortado -->
+          <svg class="icone-olho-cortado" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"></path>
+            <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"></path>
+            <path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"></path>
+            <line x1="1" y1="1" x2="23" y2="23"></line>
+          </svg>
+        </button>
+      </div>
+
+      <p id="mensagem-login" class="mensagem-login"></p>
+
+      <div class="botoes-form">
+        <button id="btn-entrar">Entrar</button>
+        <button id="btn-criar-conta">Criar conta</button>
+      </div>
+
+      <button id="btn-esqueci" class="link-botao">Esqueci minha senha</button>
+    </div>
+  </section>
+
+  <!-- TELA INICIAL: lista de saves -->
+  <section id="tela-inicial" class="tela escondido">
+    <div class="barra-conta">
+      <button id="btn-instalar" class="btn-instalar escondido" aria-label="Baixar o app" title="Baixar o app">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3v12"></path>
+          <path d="M7 11l5 5 5-5"></path>
+          <path d="M5 20h14"></path>
+        </svg>
+      </button>
+      <div class="perfil">
+        <button id="btn-perfil" class="btn-perfil" aria-label="Perfil" title="Perfil" aria-haspopup="true" aria-expanded="false" aria-controls="menu-perfil">
+          <span id="avatar-letra">?</span>
+        </button>
+        <div id="menu-perfil" class="menu-perfil escondido" role="menu">
+          <div class="perfil-topo">
+            <span id="avatar-letra-grande" class="avatar-grande">?</span>
+            <div class="perfil-dados">
+              <strong>Minha conta</strong>
+              <span id="email-conta"></span>
+            </div>
+          </div>
+          <button id="btn-sincronizar" class="item-perfil" role="menuitem">Sincronizar agora</button>
+          <button id="btn-trocar-senha" class="item-perfil" role="menuitem">Redefinir senha</button>
+          <button id="btn-sair" class="item-perfil item-sair" role="menuitem">Sair</button>
+          <p id="info-perfil" class="info-perfil"></p>
+        </div>
+      </div>
+    </div>
+
+    <header>
+      <h1>Minhas Carreiras</h1>
+    </header>
+
+    <div id="lista-saves"></div>
+    <button id="btn-novo-save">+ Novo save</button>
+
+    <div id="form-save" class="caixa escondido">
+      <h2>Novo save</h2>
+
+      <label for="busca-clube">Buscar clube</label>
+      <input type="text" id="busca-clube" placeholder="Digite para buscar...">
+
+      <div id="lista-clubes"></div>
+
+      <label for="clube-digitado">Não achou? Digite o nome do clube</label>
+      <input type="text" id="clube-digitado" placeholder="Ex: Meu Time FC">
+
+      <label for="treinador-digitado">Seu nome de treinador (opcional)</label>
+      <input type="text" id="treinador-digitado" placeholder="Ex: Danilo Melo">
+
+      <label for="liga-digitada">Divisão / liga (opcional)</label>
+      <input type="text" id="liga-digitada" placeholder="Preenche sozinho se o clube estiver na lista">
+
+      <p id="clube-escolhido">Nenhum clube escolhido</p>
+
+      <div class="botoes-form">
+        <button id="btn-criar">Criar save</button>
+        <button id="btn-cancelar">Cancelar</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- TELA DO SAVE -->
+  <section id="tela-save" class="tela tela-larga escondido">
+    <div class="conteudo-save">
+
+    <!-- Barra do topo: só aparece no celular -->
+    <div class="barra-topo-menu">
+      <button id="btn-menu" class="btn-menu" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu-lateral">
+        <span class="barrinha"></span>
+        <span class="barrinha"></span>
+        <span class="barrinha"></span>
+      </button>
+      <span id="titulo-aba-atual" class="titulo-aba-atual">Resumo</span>
+    </div>
+
+    <button id="btn-voltar">← Voltar</button>
+
+    <header>
+      <h1 id="titulo-save"></h1>
+      <p class="info-save">
+        <span id="tag-liga" class="tag"></span>
+        <button id="btn-editar-liga" class="link-pequeno">Alterar divisão</button>
+      </p>
+    </header>
+
+    <!-- Perfil do treinador (desenhado pelo script) -->
+    <div id="perfil-tecnico" class="perfil-tecnico"></div>
+
+    <div class="barra-temporada">
+      <label for="seletor-temporada">Temporada</label>
+      <select id="seletor-temporada"></select>
+      <button id="btn-nova-temporada">+ Nova temporada</button>
+      <button id="btn-excluir-temporada" class="escondido">Excluir temporada</button>
+    </div>
+    <p id="aviso-temporada" class="escondido">Crie a primeira temporada para registrar as estatísticas.</p>
+
+    <!-- Navegação: coluna fixa no computador, painel deslizante (hambúrguer) no celular -->
+    <nav id="menu-lateral" class="menu-lateral" aria-label="Navegação do save">
+      <div class="menu-cabecalho">
+        <span id="menu-clube" class="menu-clube"></span>
+        <button id="btn-fechar-menu" class="btn-fechar-menu" aria-label="Fechar menu">×</button>
+      </div>
+      <button class="aba ativa" data-aba="resumo">Resumo</button>
+      <button class="aba" data-aba="elenco">Elenco</button>
+      <button class="aba" data-aba="resultados">Resultados</button>
+      <button class="aba" data-aba="competicoes">Competições</button>
+      <button class="aba" data-aba="taticas">Táticas</button>
+      <button class="aba" data-aba="transferencias">Transferências</button>
+      <button class="aba" data-aba="hall">Hall da Fama</button>
+      <button class="aba" data-aba="recordes">Recordes</button>
+      <button class="aba" data-aba="trofeus">Sala de Troféus</button>
+      <button class="aba" data-aba="idolos">Mural de Ídolos</button>
+      <button class="aba" data-aba="linha-tempo">Linha do tempo</button>
+      <button class="aba" data-aba="anotacoes">Anotações</button>
+      <button class="aba" data-aba="graficos">Gráficos</button>
+      <button class="aba" data-aba="comparar">Comparar temporadas</button>
+    </nav>
+    <div id="fundo-menu" class="fundo-menu"></div>
+
+    <!-- ABA: Resumo do clube -->
+    <div id="aba-resumo" class="painel-aba">
+      <p id="nota-resumo" class="nota-resumo">Resumo de todas as temporadas</p>
+      <div id="cartoes-resumo" class="cartoes"></div>
+    </div>
+
+    <!-- ABA: Elenco -->
+    <div id="aba-elenco" class="painel-aba escondido">
+      <button id="btn-novo-jogador">+ Adicionar jogador</button>
+
+      <div id="form-jogador" class="caixa escondido">
+        <h2 id="titulo-form-jogador">Novo jogador</h2>
+
+        <label for="nome-jogador">Nome</label>
+        <input type="text" id="nome-jogador" placeholder="Ex: Gabriel Jesus">
+
+        <label for="posicao-jogador">Posição</label>
+        <select id="posicao-jogador"></select>
+
+        <label for="idade-jogador">Idade (opcional)</label>
+        <input type="number" id="idade-jogador" min="10" max="60" step="1" placeholder="Ex: 24">
+
+        <div class="botoes-form">
+          <button id="btn-salvar-jogador">Salvar</button>
+          <button id="btn-cancelar-jogador">Cancelar</button>
+        </div>
+      </div>
+
+      <div class="tabela-rolavel">
+        <table id="tabela-elenco">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Posição</th>
+              <th class="celula-idade">Idade</th>
+              <th class="celula-num">Jogos</th>
+              <th class="celula-num">Gols</th>
+              <th class="celula-num">Assist.</th>
+              <th class="celula-num">Amarelos</th>
+              <th class="celula-num">Vermelhos</th>
+              <th class="celula-num">Nota média</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="corpo-elenco"></tbody>
+        </table>
+      </div>
+      <p id="elenco-vazio">Nenhum jogador ainda. Clique em "+ Adicionar jogador".</p>
+    </div>
+
+    <!-- ABA: Resultados -->
+    <div id="aba-resultados" class="painel-aba escondido">
+      <div id="caixa-desempenho" class="caixa desempenho">
+        <h2 id="titulo-resultados">Desempenho do time</h2>
+        <p class="nota-resumo">Calculado automaticamente a partir dos campeonatos (aba Competições).</p>
+        <div id="area-resultados" class="rolagem-horizontal"></div>
+      </div>
+    </div>
+
+    <!-- ABA: Competições -->
+    <div id="aba-competicoes" class="painel-aba escondido">
+      <div id="caixa-campeonatos" class="caixa desempenho">
+        <h2>Campeonatos e títulos</h2>
+        <p id="resumo-titulos" class="resumo-titulos"></p>
+
+        <div id="form-campeonato" class="form-campeonato">
+          <input type="text" id="nome-campeonato" list="sugestoes-campeonatos" placeholder="Campeonato (ex: Liga)">
+          <datalist id="sugestoes-campeonatos">
+            <option value="Liga"></option>
+            <option value="Copa nacional"></option>
+            <option value="Supercopa"></option>
+            <option value="Champions League"></option>
+            <option value="Europa League"></option>
+            <option value="Conference League"></option>
+          </datalist>
+          <select id="resultado-campeonato"></select>
+          <input type="number" id="posicao-campeonato" class="campo-stat" min="1" step="1" placeholder="Posição" title="Posição final (opcional)">
+          <button id="btn-add-campeonato">Adicionar</button>
+        </div>
+
+        <div id="lista-campeonatos"></div>
+      </div>
+    </div>
+
+    <!-- ABA: Táticas -->
+    <div id="aba-taticas" class="painel-aba escondido">
+      <div class="caixa desempenho">
+        <h2 id="titulo-taticas">Aproveitamento tático</h2>
+        <p class="nota-resumo">Registre vitórias, empates e derrotas por formação e estilo de jogo. No seletor, "Geral" soma todas as temporadas.</p>
+
+        <div id="form-tatica" class="form-tatica">
+          <input type="text" id="formacao-tatica" list="sugestoes-formacoes" placeholder="Formação (ex: 4-3-3)">
+          <datalist id="sugestoes-formacoes">
+            <option value="4-3-3"></option>
+            <option value="4-4-2"></option>
+            <option value="4-2-3-1"></option>
+            <option value="4-3-2-1"></option>
+            <option value="4-1-4-1"></option>
+            <option value="4-5-1"></option>
+            <option value="4-4-1-1"></option>
+            <option value="3-5-2"></option>
+            <option value="3-4-3"></option>
+            <option value="5-3-2"></option>
+            <option value="5-2-3"></option>
+          </datalist>
+          <input type="text" id="estilo-tatica" list="sugestoes-estilos" placeholder="Estilo de jogo">
+          <datalist id="sugestoes-estilos">
+            <option value="Posse de bola"></option>
+            <option value="Contra-ataque"></option>
+            <option value="Pressão alta"></option>
+            <option value="Jogo direto"></option>
+            <option value="Jogo pelas laterais"></option>
+            <option value="Equilibrado"></option>
+          </datalist>
+          <input type="number" id="v-tatica" class="campo-stat" min="0" step="1" placeholder="V" title="Vitórias">
+          <input type="number" id="e-tatica" class="campo-stat" min="0" step="1" placeholder="E" title="Empates">
+          <input type="number" id="d-tatica" class="campo-stat" min="0" step="1" placeholder="D" title="Derrotas">
+          <button id="btn-add-tatica">Adicionar</button>
+        </div>
+
+        <div id="lista-taticas" class="rolagem-horizontal"></div>
+      </div>
+
+      <div class="caixa desempenho">
+        <h2>Táticas mais eficientes</h2>
+        <p class="nota-resumo">Clique no título de uma coluna pra ordenar.</p>
+        <div id="area-taticas-combo" class="rolagem-horizontal"></div>
+      </div>
+    </div>
+
+    <!-- ABA: Hall da Fama -->
+    <div id="aba-hall" class="painel-aba escondido">
+      <div class="caixa desempenho">
+        <h2>Hall da Fama do elenco</h2>
+        <div class="barra-hall">
+          <span>Período</span>
+          <select id="filtro-hall"></select>
+          <input type="text" id="busca-hall" placeholder="Buscar jogador..." autocomplete="off" aria-label="Buscar jogador">
+        </div>
+        <p class="nota-resumo">Clique no título de uma coluna pra ordenar. Por exemplo, clique em Gols pra ver os maiores artilheiros.</p>
+        <div id="area-hall" class="rolagem-horizontal"></div>
+      </div>
+    </div>
+
+    <!-- ABA: Recordes -->
+    <div id="aba-recordes" class="painel-aba escondido">
+      <div class="caixa desempenho">
+        <h2>Recordes da carreira</h2>
+        <p class="nota-resumo">Atualizado sozinho com tudo que você cadastrou, somando todas as temporadas.</p>
+        <div id="area-recordes" class="cartoes recordes"></div>
+      </div>
+    </div>
+
+    <!-- ABA: Sala de Troféus -->
+    <div id="aba-trofeus" class="painel-aba escondido">
+      <div class="caixa desempenho">
+        <h2>Sala de Troféus</h2>
+        <p class="nota-resumo">Todos os títulos que você conquistou no clube, temporada por temporada.</p>
+        <div id="area-trofeus"></div>
+      </div>
+    </div>
+
+    <!-- ABA: Mural de Ídolos -->
+    <div id="aba-idolos" class="painel-aba escondido">
+      <div class="caixa desempenho">
+        <h2>Mural de Ídolos</h2>
+        <p class="nota-resumo">Os ídolos pelos números saem sozinhos do elenco, somando todas as temporadas.</p>
+
+        <h3 class="subtitulo-idolos">Seu ídolo</h3>
+        <div id="area-idolo-escolhido"></div>
+        <div class="form-idolo">
+          <input type="text" id="nome-idolo" list="sugestoes-idolo" placeholder="Jogador (do elenco ou outro nome)">
+          <datalist id="sugestoes-idolo"></datalist>
+          <input type="text" id="motivo-idolo" maxlength="140" placeholder="Por que ele é seu ídolo? (opcional)">
+          <button id="btn-salvar-idolo">Salvar ídolo</button>
+        </div>
+
+        <h3 class="subtitulo-idolos">Ídolos pelos números</h3>
+        <div id="area-idolos-auto" class="cartoes"></div>
+      </div>
+    </div>
+
+    <!-- ABA: Linha do tempo -->
+    <div id="aba-linha-tempo" class="painel-aba escondido">
+      <div class="caixa desempenho">
+        <h2>Linha do tempo da carreira</h2>
+        <p class="nota-resumo">Uma entrada por temporada, da mais recente para a mais antiga. Registre aqui também propostas, recusas e demissões.</p>
+        <div id="form-evento" class="form-evento">
+          <select id="temporada-evento" title="Temporada"></select>
+          <select id="tipo-evento" title="O que aconteceu"></select>
+          <select id="destino-evento" title="Clube ou seleção">
+            <option value="clube">Clube</option>
+            <option value="selecao">Seleção</option>
+          </select>
+          <input type="text" id="clube-evento" list="sugestoes-destino" placeholder="Clube (busque ou digite)">
+          <datalist id="sugestoes-destino"></datalist>
+          <input type="text" id="detalhe-evento" maxlength="120" placeholder="Detalhe (opcional)">
+          <button id="btn-add-evento">Adicionar</button>
+        </div>
+        <div id="area-linha-tempo" class="linha-do-tempo"></div>
+      </div>
+    </div>
+
+    <!-- ABA: Anotações -->
+    <div id="aba-anotacoes" class="painel-aba escondido">
+      <div class="caixa desempenho">
+        <h2>Anotações por temporada</h2>
+        <p class="nota-resumo">Escreva o que aconteceu em cada temporada. Salva sozinho enquanto você digita.</p>
+        <div id="area-anotacoes" class="area-anotacoes"></div>
+      </div>
+    </div>
+
+    <!-- ABA: Comparar temporadas -->
+    <div id="aba-comparar" class="painel-aba escondido">
+      <div class="caixa desempenho">
+        <h2>Comparar temporadas</h2>
+        <div class="barra-hall">
+          <select id="comparar-a" aria-label="Primeira temporada"></select>
+          <span>contra</span>
+          <select id="comparar-b" aria-label="Segunda temporada"></select>
+        </div>
+        <div id="area-comparar" class="rolagem-horizontal"></div>
+      </div>
+    </div>
+
+    <!-- ABA: Gráficos -->
+    <div id="aba-graficos" class="painel-aba escondido">
+      <div class="caixa desempenho">
+        <h2>Evolução da carreira</h2>
+        <p class="nota-resumo">Um gráfico por assunto, com uma coluna para cada temporada.</p>
+        <div id="area-graficos" class="graficos"></div>
+      </div>
+    </div>
+
+    <!-- ABA: Transferências -->
+    <div id="aba-transferencias" class="painel-aba escondido">
+      <div class="sub-abas">
+        <button class="sub-aba ativa" data-sub="mercado">Mercado</button>
+        <button class="sub-aba" data-sub="financas">Finanças da temporada</button>
+      </div>
+
+      <!-- Mercado -->
+      <div id="sub-mercado" class="sub-painel">
+        <div id="caixa-transferencias" class="caixa desempenho">
+          <h2>Mercado de transferências</h2>
+          <div id="resumo-dinheiro"></div>
+
+          <div id="form-transferencia" class="form-transferencia">
+            <select id="tipo-transferencia">
+              <option value="chegada">Chegada (compra)</option>
+              <option value="saida">Saída (venda)</option>
+              <option value="emprestimo_chegada">Empréstimo: chegou</option>
+              <option value="emprestimo_saida">Empréstimo: saiu</option>
+              <option value="sem_contrato">Sem contrato (chegada grátis)</option>
+            </select>
+            <input type="text" id="jogador-transferencia" placeholder="Jogador">
+            <input type="text" id="clube-transferencia" placeholder="Clube (de onde veio / para onde foi)">
+            <input type="number" id="valor-transferencia" min="0" step="0.1" placeholder="Valor (€ mi)">
+            <select id="opcao-emprestimo" class="escondido">
+              <option value="sem">Sem opção de compra</option>
+              <option value="com">Com opção de compra</option>
+            </select>
+            <input type="number" id="valor-opcao" class="escondido" min="0" step="0.1" placeholder="Valor da opção (€ mi)">
+            <button id="btn-add-transferencia">Adicionar</button>
+          </div>
+
+          <div id="lista-transferencias"></div>
+        </div>
+      </div>
+
+      <!-- Finanças da temporada -->
+      <div id="sub-financas" class="sub-painel escondido">
+        <div class="caixa desempenho">
+          <h2 id="titulo-financas">Finanças da temporada</h2>
+          <div id="entradas-financas" class="cartoes"></div>
+          <div id="cartoes-financas" class="cartoes"></div>
+          <p class="nota-resumo">Orçamento restante = orçamento inicial + vendas − compras. O salário total é só pra você acompanhar e não entra nessa conta.</p>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- Backup: pílula pequena no canto esquerdo; ao clicar, mostra as opções -->
+  <div id="backup-flutuante" class="backup-flutuante escondido">
+    <div id="menu-backup" class="menu-backup escondido" role="menu">
+      <button id="btn-exportar-backup" class="item-backup" role="menuitem">Salvar backup</button>
+      <button id="btn-importar-backup" class="item-backup" role="menuitem">Restaurar backup</button>
+      <p id="info-backup" class="info-backup"></p>
+    </div>
+    <button id="btn-backup" class="pilula-backup" aria-haspopup="true" aria-expanded="false" aria-controls="menu-backup">Backup</button>
+    <input type="file" id="arquivo-backup" accept=".json,application/json" class="escondido">
+  </div>
+
+  <!-- Aviso de sincronização (canto da tela) -->
+  <div id="status-nuvem" class="status-nuvem escondido"></div>
+
+  <script src="clubes.js"></script>
+  <script src="selecoes.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
+  <script type="module" src="nuvem.js"></script>
+  <script>
+    // Botão de instalar o app (aparece só quando dá pra instalar)
+    (function () {
+      const botao = document.getElementById("btn-instalar");
+
+      // Links dos instaladores (troque SEU-USUARIO e SEU-REPOSITORIO pelos do seu GitHub)
+      const LINK_PC = "https://github.com/DanMeloTvrs/DanMeloTvrs/releases/latest/download/Career-Hub-Setup.exe";
+      const LINK_ANDROID = "https://github.com/DanMeloTvrs/DanMeloTvrs/releases/latest/download/Career-Hub.apk";
+      let convite = null;
+
+      const jaInstalado = function () {
+        return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+      };
+      const ehIos = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+        (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+      // Dentro do app do PC (Electron) ou já instalado: não precisa do botão
+      if (/electron/i.test(navigator.userAgent) || jaInstalado()) return;
+
+      const ehAndroid = /android/i.test(navigator.userAgent);
+      const ehWindows = /windows nt/i.test(navigator.userAgent);
+
+      function baixar(caminho) {
+        const link = document.createElement("a");
+        link.href = caminho;
+        link.download = "";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }
+
+      // O botão sempre aparece (some só se o app já estiver instalado)
+      botao.classList.remove("escondido");
+
+      window.addEventListener("beforeinstallprompt", function (evento) {
+        evento.preventDefault();
+        convite = evento;
+        botao.classList.remove("escondido");
+      });
+
+      window.addEventListener("appinstalled", function () {
+        convite = null;
+        botao.classList.add("escondido");
+      });
+
+      botao.addEventListener("click", async function () {
+        if (ehWindows) {
+          baixar(LINK_PC);
+        } else if (ehAndroid) {
+          baixar(LINK_ANDROID);
+        } else if (convite) {
+          convite.prompt();
+          await convite.userChoice;
+          convite = null;
+        } else if (ehIos) {
+          alert("Pra instalar no iPhone: toque no botão de compartilhar do Safari e escolha \"Adicionar à Tela de Início\".");
+        } else {
+          alert("Pra instalar: abra o menu do navegador (os três pontinhos) e escolha \"Instalar app\" ou \"Adicionar à tela inicial\". No PC, também tem um ícone de instalar na barra de endereço.");
+        }
+      });
+    })();
+
+    // Registra o service worker (deixa o app instalável e abrindo mais rápido)
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("sw.js").catch(function () {});
+      });
+    }
+  </script>
+</body>
+</html>
