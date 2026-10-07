@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.web.carreirafifa52ba1.twa",
+        "sha256_cert_fingerprints": ["53:31:D6:A3:DD:A8:26:4C:EC:01:BB:42:3E:72:2B:3F:B4:BC:C2:CF:62:F2:9C:DA:DA:2C:C1:61:AD:E2:CD:9B"]
+      }
+    }]

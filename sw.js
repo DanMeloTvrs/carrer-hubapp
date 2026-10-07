@@ -1,6 +1,6 @@
-// Career Hub — service worker simples: tenta a internet primeiro e usa a cópia guardada se estiver offline.
-// Só mexe nos arquivos do próprio app; Firebase, login e fontes passam direto.
-const CACHE = "career-hub-v2";
+// Career Hub — service worker: internet primeiro, cópia guardada se estiver offline.
+// Quando sai versão nova, atualiza e recarrega a página sozinho.
+const CACHE = "career-hub-v3";
 const ARQUIVOS = [
   "./", "index.html", "style.css", "script.js", "clubes.js", "selecoes.js",
   "firebase-config.js", "nuvem.js", "logo.png", "icon-192.png", "icon-512.png", "manifest.webmanifest"
@@ -9,8 +9,9 @@ const ARQUIVOS = [
 self.addEventListener("install", function (evento) {
   evento.waitUntil(
     caches.open(CACHE).then(function (cache) {
-      // Um por um, pra um arquivo faltando não derrubar o resto
-      return Promise.all(ARQUIVOS.map(function (a) { return cache.add(a).catch(function () {}); }));
+      return Promise.all(ARQUIVOS.map(function (a) {
+        return cache.add(new Request(a, { cache: "reload" })).catch(function () {});
+      }));
     }).then(function () { return self.skipWaiting(); })
   );
 });
@@ -18,8 +19,17 @@ self.addEventListener("install", function (evento) {
 self.addEventListener("activate", function (evento) {
   evento.waitUntil(
     caches.keys().then(function (nomes) {
-      return Promise.all(nomes.filter(function (n) { return n !== CACHE; }).map(function (n) { return caches.delete(n); }));
-    }).then(function () { return self.clients.claim(); })
+      const antigos = nomes.filter(function (n) { return n !== CACHE; });
+      return Promise.all(antigos.map(function (n) { return caches.delete(n); }))
+        .then(function () { return self.clients.claim(); })
+        .then(function () {
+          // Só recarrega se existia versão antiga (não na primeira instalação)
+          if (!antigos.length) return;
+          return self.clients.matchAll({ type: "window" }).then(function (janelas) {
+            janelas.forEach(function (j) { j.navigate(j.url); });
+          });
+        });
+    })
   );
 });
 
@@ -27,10 +37,11 @@ self.addEventListener("fetch", function (evento) {
   const req = evento.request;
   const url = new URL(req.url);
 
-  if (req.method !== "GET" || url.origin !== self.location.origin || url.pathname.startsWith("/__/") || url.pathname.startsWith("/downloads/")) return;
+  if (req.method !== "GET" || url.origin !== self.location.origin ||
+      url.pathname.startsWith("/__/") || url.pathname.startsWith("/downloads/")) return;
 
   evento.respondWith(
-    fetch(req).then(function (resposta) {
+    fetch(req, { cache: "no-cache" }).then(function (resposta) {
       if (resposta && resposta.ok) {
         const copia = resposta.clone();
         caches.open(CACHE).then(function (cache) { cache.put(req, copia); });

@@ -498,8 +498,8 @@
       const botao = document.getElementById("btn-instalar");
 
       // Links dos instaladores (troque SEU-USUARIO e SEU-REPOSITORIO pelos do seu GitHub)
-      const LINK_PC = "https://github.com/DanMeloTvrs/DanMeloTvrs/releases/latest/download/Career-Hub-Setup.exe";
-      const LINK_ANDROID = "https://github.com/DanMeloTvrs/DanMeloTvrs/releases/latest/download/Career-Hub.apk";
+      const LINK_PC = "https://raw.githubusercontent.com/DanMeloTvrs/carrer-hubapp/main/downloads/Career-Hub-Setup.exe";
+      const LINK_ANDROID = "https://raw.githubusercontent.com/DanMeloTvrs/carrer-hubapp/main/downloads/Career-Hub.apk";
       let convite = null;
 
       const jaInstalado = function () {
@@ -515,13 +515,8 @@
       const ehWindows = /windows nt/i.test(navigator.userAgent);
 
       function baixar(caminho) {
-        const link = document.createElement("a");
-        link.href = caminho;
-        link.download = "";
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-      }
+  window.location.href = caminho;
+}
 
       // O botão sempre aparece (some só se o app já estiver instalado)
       botao.classList.remove("escondido");
